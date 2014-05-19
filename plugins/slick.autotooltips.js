@@ -19,7 +19,9 @@
     var _defaults = {
       enableForCells: true,
       enableForHeaderCells: false,
-      maxToolTipLength: null
+      maxToolTipLength: null,
+      $scope: null,
+      $compile: null
     };
     
     /**
@@ -70,8 +72,21 @@
       var column = args.column,
           $node = $(e.target).closest(".slick-header-column");
       if (!column.toolTip) {
+        column.toolTip = true;
         var tooltipName = column.longName ? column.longName : column.name;
-        $node.attr("title", tooltipName);
+
+        if (options.$compile && options.$scope) {
+            $node.attr("tooltip-html-unsafe", tooltipName);
+            $node.attr("tooltip-append-to-body", true);
+            options.$compile($node)(options.$scope);
+
+            setTimeout(function (){
+                $node.trigger('mouseenter');
+            }, 0);
+
+        } else {
+            $node.attr("title", tooltipName);
+        }
       }
     }
     
