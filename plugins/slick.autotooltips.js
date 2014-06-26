@@ -16,6 +16,7 @@
   function AutoTooltips(options) {
     var _grid;
     var _self = this;
+    var _doubleTooltipListener;
     var _defaults = {
       enableForCells: true,
       enableForHeaderCells: false,
@@ -32,6 +33,18 @@
       _grid = grid;
       if (options.enableForCells) _grid.onMouseEnter.subscribe(handleMouseEnter);
       if (options.enableForHeaderCells) _grid.onHeaderMouseEnter.subscribe(handleHeaderMouseEnter);
+
+        //Is required so that it can not happen that there are two tool tips at the same time
+        //Sometimes that happened if the html elements from the grid were suddenly removed.
+      if (options.$scope) {
+          _doubleTooltipListener = options.$scope.$watch(function () {return $('body > div[tooltip-html-unsafe-popup]').length},
+            function ()  {
+              var elements = $('body > div[tooltip-html-unsafe-popup]');
+              if (elements.length > 1) {
+                  elements[0].remove();
+              }
+          });
+      }
     }
     
     /**
@@ -40,6 +53,7 @@
     function destroy() {
       if (options.enableForCells) _grid.onMouseEnter.unsubscribe(handleMouseEnter);
       if (options.enableForHeaderCells) _grid.onHeaderMouseEnter.unsubscribe(handleHeaderMouseEnter);
+      if (_doubleTooltipListener) _doubleTooltipListener();
     }
     
     /**
@@ -73,7 +87,7 @@
           $node = $(e.target).closest(".slick-header-column");
       if (!column.toolTip) {
         column.toolTip = true;
-        var tooltipName = column.longName ? column.longName : column.name;
+        var tooltipName = column.longName ? _.unescape(column.longName) : column.name;
 
         if (options.$compile && options.$scope) {
             $node.attr("tooltip-html-unsafe", tooltipName);
