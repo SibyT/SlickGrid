@@ -85,8 +85,7 @@
     function handleHeaderMouseEnter(e, args) {
       var column = args.column,
           $node = $(e.target).closest(".slick-header-column");
-      if (!column.toolTip) {
-        column.toolTip = true;
+      if (column && $node.attr('tooltip-html-unsafe') === undefined) {
         var tooltipName = column.longName ? _.unescape(column.longName) : column.name;
 
         if (options.$compile && options.$scope) {
