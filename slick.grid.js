@@ -672,6 +672,7 @@ if (typeof Slick === "undefined") {
     function setupColumnReorder() {
       $headers.filter(":ui-sortable").sortable("destroy");
       $headers.sortable({
+        items: '> div:not([id*=checkbox_selector])',
         containment: "parent",
         distance: 3,
         axis: "x",
@@ -694,10 +695,27 @@ if (typeof Slick === "undefined") {
 
           var reorderedIds = $headers.sortable("toArray");
           var reorderedColumns = [];
+          var staticColumns = [];
+
+          //First take the reordered elements. Afterwards the not orderable element are set in front of the
+          //ordered elements.
           for (var i = 0; i < reorderedIds.length; i++) {
-            reorderedColumns.push(columns[getColumnIndex(reorderedIds[i].replace(uid, ""))]);
+            var columnIndexKey = reorderedIds[i].replace(uid, "");
+            var columnIndex = getColumnIndex(columnIndexKey);
+            delete columnsById[columnIndexKey];
+            reorderedColumns.push(columns[columnIndex]);
           }
-          setColumns(reorderedColumns);
+
+          for (var x = 0; x < columns.length; x++) {
+            for (var key in columnsById) {
+                if (columnsById[key] === x) {
+                    staticColumns.push(columns[x]);
+                    break;
+                }
+            }
+          }
+
+          setColumns(staticColumns.concat(reorderedColumns));
 
           trigger(self.onColumnsReordered, {});
           e.stopPropagation();
