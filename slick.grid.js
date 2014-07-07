@@ -86,7 +86,8 @@ if (typeof Slick === "undefined") {
       multiColumnSort: false,
       defaultFormatter: defaultFormatter,
       forceSyncScrolling: false,
-      addNewRowCssClass: "new-row"
+      addNewRowCssClass: "new-row",
+      alwaysHScroll: false
     };
 
     var columnDefaults = {
@@ -409,11 +410,11 @@ if (typeof Slick === "undefined") {
       var oldCanvasWidth = canvasWidth;
       canvasWidth = getCanvasWidth();
 
-      if (canvasWidth != oldCanvasWidth) {
+      if (canvasWidth != oldCanvasWidth || viewportHasHScroll !== (canvasWidth > viewportW - scrollbarDimensions.width)) {
         $canvas.outerWidth(canvasWidth);
         $headerRow.outerWidth(canvasWidth);
         $headers.outerWidth(getHeadersWidth());
-        viewportHasHScroll = (canvasWidth > viewportW - scrollbarDimensions.width);
+        viewportHasHScroll = options.alwaysHScroll ? true : (canvasWidth > viewportW - scrollbarDimensions.width);
       }
 
       $headerRowSpacer.outerWidth(canvasWidth + (viewportHasVScroll ? scrollbarDimensions.width : 0));
