@@ -1021,6 +1021,21 @@ if (typeof Slick === "undefined") {
 
       $canvas.unbind("draginit dragstart dragend drag");
       $container.empty().removeClass(uid);
+
+      $headerScroller.unbind();
+      $headers.unbind();
+
+      $headerScroller = undefined;
+      $headers = undefined;
+      $headerRowSpacer = undefined;
+      $canvas = undefined;
+      $viewport = undefined;
+      $topPanel = undefined;
+      $topPanelScroller = undefined;
+      $boundAncestors = undefined;
+      $focusSink = undefined;
+      $focusSink2 = undefined;
+      $container = undefined;
     }
 
 
