@@ -3393,6 +3393,7 @@ if (typeof Slick === "undefined") {
       "setSelectedRows": setSelectedRows,
       "getContainerNode": getContainerNode,
 
+      "updateColumnCaches": updateColumnCaches,
       "render": render,
       "invalidate": invalidate,
       "invalidateRow": invalidateRow,
